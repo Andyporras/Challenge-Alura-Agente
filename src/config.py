@@ -31,7 +31,7 @@ def _get_required(name: str) -> str:
 GOOGLE_API_KEY: str = _get_required("GOOGLE_API_KEY")
 
 # Modelo de Gemini a utilizar
-MODEL_NAME: str = os.getenv("MODEL_NAME", "gemini-2.5-flash")
+MODEL_NAME: str = os.getenv("MODEL_NAME", "gemini-3.1-flash-lite-preview")
 
 # Ruta al dataset ganadero
 DATASET_PATH: str = os.getenv("DATASET_PATH", "data/ganaderia_dataset.csv")

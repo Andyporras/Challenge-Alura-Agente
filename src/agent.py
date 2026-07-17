@@ -47,10 +47,13 @@ def build_agent(df: pd.DataFrame) -> AgentExecutor:
         f"{get_dataset_summary(df)}"
     )
 
+    # tool-calling usa function calling nativo de Gemini, mucho mas
+    # confiable que el parseo de texto del formato ReAct por defecto
     agent = create_pandas_dataframe_agent(
         llm=llm,
         df=df,
         prefix=prefix,
+        agent_type="tool-calling",
         verbose=True,
         agent_executor_kwargs={"handle_parsing_errors": True},
         max_iterations=MAX_ITERATIONS,
@@ -74,7 +77,25 @@ def ask(agent: AgentExecutor, question: str) -> str:
         Respuesta del agente en texto, o un mensaje de error amigable.
     """
     try:
-        result = agent.invoke({"input": question})
-        return str(result.get("output", ""))
+        # Reintentar una vez si el modelo devuelve una respuesta vacia
+        for _ in range(2):
+            result = agent.invoke({"input": question})
+            answer = _coerce_output(result.get("output", ""))
+            if answer.strip():
+                return answer
+        return "Error: No pude procesar la pregunta. Intenta reformularla."
     except Exception:
         return "Error: No pude procesar la pregunta. Intenta reformularla."
+
+
+def _coerce_output(output: object) -> str:
+    # Gemini puede devolver la respuesta como lista de partes de contenido
+    if isinstance(output, list):
+        parts = []
+        for part in output:
+            if isinstance(part, dict):
+                parts.append(str(part.get("text", "")))
+            else:
+                parts.append(str(part))
+        return "".join(parts)
+    return str(output)

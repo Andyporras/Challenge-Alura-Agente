@@ -1,0 +1,27 @@
+[Unit]
+Description=Agente Ganadero - Interfaz Streamlit (LangChain + Gemini)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/Challenge-Alura-Agente
+
+# Variables de entorno (GOOGLE_API_KEY, MODEL_NAME, DATASET_PATH, TEMPERATURE)
+EnvironmentFile=/home/ubuntu/Challenge-Alura-Agente/.env
+
+# Streamlit escucha solo en localhost: nginx expone el servicio hacia afuera
+ExecStart=/home/ubuntu/Challenge-Alura-Agente/.venv/bin/streamlit run app.py \
+    --server.port 8501 \
+    --server.address 127.0.0.1 \
+    --server.headless true
+
+Restart=always
+RestartSec=5
+
+# Logs disponibles con: journalctl -u alura-agente -f
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

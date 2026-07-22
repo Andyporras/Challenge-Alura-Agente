@@ -30,9 +30,10 @@ Desarrollado como entrega del challenge **Alura Agente**.
 
 ## Demo
 
-- **Enlace público:** http://&lt;IP-OCI&gt; *(reemplazar por la IP pública de la VM
-  una vez desplegada)*
-- **Captura de pantalla:** ![Interfaz del Agente Ganadero](docs/screenshot.png)
+- **Enlace público:** [http://159.54.146.186](http://159.54.146.186)
+- **Captura de pantalla:**
+
+![Interfaz del Agente Ganadero](docs/screenshot.png)
 
 ## Arquitectura
 
